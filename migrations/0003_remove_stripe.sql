@@ -1,11 +1,5 @@
--- Migration 0003: Suppression de toutes les colonnes Stripe
--- Date: 2026-01-02
 
--- Supprimer les colonnes Stripe de la table cours_arabe_inscriptions
--- Note: SQLite ne supporte pas ALTER TABLE DROP COLUMN directement
--- Il faut recréer la table sans les colonnes Stripe
 
--- Créer une nouvelle table temporaire sans les colonnes Stripe
 CREATE TABLE cours_arabe_inscriptions_new (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
   nom_eleve TEXT NOT NULL,
@@ -31,7 +25,6 @@ CREATE TABLE cours_arabe_inscriptions_new (
   date_inscription DATETIME DEFAULT CURRENT_TIMESTAMP
 );
 
--- Copier les données (sans les colonnes Stripe)
 INSERT INTO cours_arabe_inscriptions_new 
 SELECT 
   id, nom_eleve, prenom_eleve, date_naissance, niveau_arabe, type_cours,
@@ -41,13 +34,10 @@ SELECT
   statut_paiement, date_inscription
 FROM cours_arabe_inscriptions;
 
--- Supprimer l'ancienne table
 DROP TABLE cours_arabe_inscriptions;
 
--- Renommer la nouvelle table
 ALTER TABLE cours_arabe_inscriptions_new RENAME TO cours_arabe_inscriptions;
 
--- Faire de même pour stages_intensifs_inscriptions
 CREATE TABLE stages_intensifs_inscriptions_new (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
   civilite TEXT NOT NULL,
@@ -63,15 +53,12 @@ CREATE TABLE stages_intensifs_inscriptions_new (
   date_inscription DATETIME DEFAULT CURRENT_TIMESTAMP
 );
 
--- Copier les données
 INSERT INTO stages_intensifs_inscriptions_new 
 SELECT 
   id, civilite, nom, prenom, telephone, date_naissance, email,
   type_stage, date_stage, montant, statut_paiement, date_inscription
 FROM stages_intensifs_inscriptions;
 
--- Supprimer l'ancienne table
 DROP TABLE stages_intensifs_inscriptions;
 
--- Renommer la nouvelle table
 ALTER TABLE stages_intensifs_inscriptions_new RENAME TO stages_intensifs_inscriptions;

@@ -60,7 +60,6 @@ export const getAdminLoginPage = () => {
 export const getAdminDashboardPage = () => {
   return `
     <div class="min-h-screen bg-gray-100">
-      <!-- Admin Header -->
       <header class="bg-teal-700 text-white shadow-lg">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
           <div class="flex justify-between items-center">
@@ -74,9 +73,7 @@ export const getAdminDashboardPage = () => {
         </div>
       </header>
 
-      <!-- Admin Content -->
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <!-- Tabs -->
         <div class="bg-white rounded-lg shadow-lg mb-6">
           <div class="border-b border-gray-200">
             <nav class="-mb-px flex space-x-8 px-6">
@@ -96,7 +93,6 @@ export const getAdminDashboardPage = () => {
           </div>
         </div>
 
-        <!-- Actualités Tab -->
         <div id="content-actualites" class="tab-content">
           <div class="bg-white rounded-lg shadow-lg p-6 mb-6">
             <h2 class="text-2xl font-bold mb-4">➕ Nouvelle Actualité</h2>
@@ -133,12 +129,10 @@ export const getAdminDashboardPage = () => {
           <div class="bg-white rounded-lg shadow-lg p-6">
             <h2 class="text-2xl font-bold mb-4">📰 Liste des Actualités</h2>
             <div id="actualites-list" class="space-y-4">
-              <!-- Loaded dynamically -->
             </div>
           </div>
         </div>
 
-        <!-- Projets Tab -->
         <div id="content-projets" class="tab-content hidden">
           <div class="bg-white rounded-lg shadow-lg p-6 mb-6">
             <h2 class="text-2xl font-bold mb-4">➕ Nouveau Projet</h2>
@@ -184,24 +178,20 @@ export const getAdminDashboardPage = () => {
           <div class="bg-white rounded-lg shadow-lg p-6">
             <h2 class="text-2xl font-bold mb-4">📋 Liste des Projets</h2>
             <div id="projets-list" class="space-y-4">
-              <!-- Loaded dynamically -->
             </div>
           </div>
         </div>
 
-        <!-- Inscriptions Tab -->
         <div id="content-inscriptions" class="tab-content hidden">
           <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div class="bg-white rounded-lg shadow-lg p-6">
               <h2 class="text-2xl font-bold mb-4">📚 Cours d'Arabe</h2>
               <div id="inscriptions-cours-list" class="space-y-2">
-                <!-- Loaded dynamically -->
               </div>
             </div>
             <div class="bg-white rounded-lg shadow-lg p-6">
               <h2 class="text-2xl font-bold mb-4">🎓 Stages Intensifs</h2>
               <div id="inscriptions-stages-list" class="space-y-2">
-                <!-- Loaded dynamically -->
               </div>
             </div>
           </div>

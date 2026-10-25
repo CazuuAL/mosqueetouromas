@@ -1,16 +1,13 @@
-// Check authentication
 function checkAuth() {
   const token = localStorage.getItem('admin_token');
   if (!token) {
     window.location.href = '/admin/login';
     return false;
   }
-  // Envoyer le token sur tous les appels API suivants (routes admin protégées)
   axios.defaults.headers.common['Authorization'] = 'Bearer ' + token;
   return true;
 }
 
-// Si le token est invalide ou expiré, renvoyer vers la page de connexion
 axios.interceptors.response.use(
   (response) => response,
   (error) => {
@@ -21,27 +18,22 @@ axios.interceptors.response.use(
   }
 );
 
-// Logout
 function logout() {
   localStorage.removeItem('admin_token');
   window.location.href = '/admin/login';
 }
 
-// Show tab
 function showTab(tabName) {
-  // Hide all tabs
   document.querySelectorAll('.tab-content').forEach(tab => tab.classList.add('hidden'));
   document.querySelectorAll('.tab-btn').forEach(btn => {
     btn.classList.remove('border-teal-500', 'text-teal-600');
     btn.classList.add('border-transparent', 'text-gray-500');
   });
-  
-  // Show selected tab
+
   document.getElementById('content-' + tabName).classList.remove('hidden');
   document.getElementById('tab-' + tabName).classList.add('border-teal-500', 'text-teal-600');
   document.getElementById('tab-' + tabName).classList.remove('border-transparent', 'text-gray-500');
-  
-  // Load data for the selected tab
+
   if (tabName === 'actualites') {
     loadActualites();
   } else if (tabName === 'projets') {
@@ -51,12 +43,11 @@ function showTab(tabName) {
   }
 }
 
-// Load actualités
 async function loadActualites() {
   try {
     const response = await axios.get('/api/actualites');
     const list = document.getElementById('actualites-list');
-    
+
     if (response.data.success && response.data.actualites.length > 0) {
       list.innerHTML = response.data.actualites.map(actu => `
         <div class="border rounded-lg p-4 hover:shadow-md transition">
@@ -81,12 +72,11 @@ async function loadActualites() {
   }
 }
 
-// Load projets
 async function loadProjets() {
   try {
     const response = await axios.get('/api/projets');
     const list = document.getElementById('projets-list');
-    
+
     if (response.data.success && response.data.projets.length > 0) {
       list.innerHTML = response.data.projets.map(projet => `
         <div class="border rounded-lg p-4 hover:shadow-md transition">
@@ -124,13 +114,11 @@ async function loadProjets() {
   }
 }
 
-// Load inscriptions
 async function loadInscriptions() {
   try {
-    // Load cours d'arabe
     const courResponse = await axios.get('/api/inscriptions/cours-arabe');
     const coursList = document.getElementById('inscriptions-cours-list');
-    
+
     if (courResponse.data.success && courResponse.data.inscriptions.length > 0) {
       coursList.innerHTML = `<p class="text-sm font-semibold mb-2">Total: ${courResponse.data.inscriptions.length} inscriptions</p>` +
         courResponse.data.inscriptions.slice(0, 10).map(ins => `
@@ -145,11 +133,10 @@ async function loadInscriptions() {
     } else {
       coursList.innerHTML = '<p class="text-gray-500 text-sm">Aucune inscription.</p>';
     }
-    
-    // Load stages
+
     const stagesResponse = await axios.get('/api/inscriptions/stages');
     const stagesList = document.getElementById('inscriptions-stages-list');
-    
+
     if (stagesResponse.data.success && stagesResponse.data.inscriptions.length > 0) {
       stagesList.innerHTML = `<p class="text-sm font-semibold mb-2">Total: ${stagesResponse.data.inscriptions.length} inscriptions</p>` +
         stagesResponse.data.inscriptions.slice(0, 10).map(ins => `
@@ -169,17 +156,15 @@ async function loadInscriptions() {
   }
 }
 
-// Form handlers
 document.addEventListener('DOMContentLoaded', function() {
   if (!checkAuth()) return;
-  
-  // Add actualité form
+
   document.getElementById('add-actualite-form')?.addEventListener('submit', async (e) => {
     e.preventDefault();
     const formData = new FormData(e.target);
     const data = Object.fromEntries(formData.entries());
     data.est_publie = 1;
-    
+
     try {
       const response = await axios.post('/api/actualites', data);
       if (response.data.success) {
@@ -192,8 +177,7 @@ document.addEventListener('DOMContentLoaded', function() {
       console.error(error);
     }
   });
-  
-  // Add projet form
+
   document.getElementById('add-projet-form')?.addEventListener('submit', async (e) => {
     e.preventDefault();
     const formData = new FormData(e.target);
@@ -201,7 +185,7 @@ document.addEventListener('DOMContentLoaded', function() {
     data.est_actif = 1;
     data.objectif_financier = parseFloat(data.objectif_financier) || null;
     data.montant_collecte = parseFloat(data.montant_collecte) || 0;
-    
+
     try {
       const response = await axios.post('/api/projets', data);
       if (response.data.success) {
@@ -214,7 +198,6 @@ document.addEventListener('DOMContentLoaded', function() {
       console.error(error);
     }
   });
-  
-  // Load initial data
+
   loadActualites();
 });

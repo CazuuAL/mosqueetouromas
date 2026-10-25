@@ -67,7 +67,6 @@ export const getCoursArabePage = () => {
                 </h3>
                 
                 <form id="cours-arabe-form" class="space-y-6">
-                    <!-- Type de cours -->
                     <div>
                         <label class="block text-gray-700 font-semibold mb-2">Type de cours *</label>
                         <select id="type_cours" name="type_cours" required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent">
@@ -78,7 +77,6 @@ export const getCoursArabePage = () => {
                         </select>
                     </div>
 
-                    <!-- Informations élève -->
                     <div class="grid md:grid-cols-2 gap-4">
                         <div>
                             <label class="block text-gray-700 font-semibold mb-2">Nom de l'élève *</label>
@@ -106,7 +104,6 @@ export const getCoursArabePage = () => {
                         </div>
                     </div>
 
-                    <!-- Coordonnées -->
                     <div>
                         <label class="block text-gray-700 font-semibold mb-2">Adresse *</label>
                         <input type="text" name="adresse" required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent">
@@ -134,7 +131,6 @@ export const getCoursArabePage = () => {
                         </div>
                     </div>
 
-                    <!-- Section mineur (affiché uniquement si Cours Enfants) -->
                     <div id="mineur-section" style="display: none;" class="border-t pt-6 space-y-6">
                         <h4 class="text-xl font-bold text-gray-800 mb-4">Informations parent / tuteur</h4>
                         
@@ -186,7 +182,6 @@ export const getCoursArabePage = () => {
                         </div>
                     </div>
 
-                    <!-- Tarif info -->
                     <div id="tarif-info" class="bg-teal-50 rounded-lg p-4">
                         <h4 class="font-semibold text-gray-800 mb-2">Tarif :</h4>
                         <p class="text-sm text-gray-600">Sélectionnez le type de cours pour voir le tarif</p>

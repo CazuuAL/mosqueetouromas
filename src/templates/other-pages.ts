@@ -222,7 +222,6 @@ export const getContactPage = () => {
                 </div>
             </div>
 
-            <!-- Map -->
             <div class="mt-12 bg-white rounded-xl shadow-lg overflow-hidden">
                 <div class="h-96 bg-gray-200 flex items-center justify-center">
                     <div class="text-center text-gray-500">

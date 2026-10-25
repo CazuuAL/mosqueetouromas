@@ -19,15 +19,9 @@ type Bindings = {
 
 const app = new Hono<{ Bindings: Bindings }>()
 
-// Enable CORS for API routes
 app.use('/api/*', cors())
-
-// Serve static files
 app.use('/static/*', serveStatic({ root: './public' }))
 
-// Middleware de protection des routes admin
-// Les données d'inscriptions (noms, adresses, téléphones, infos mineurs) et la
-// création de contenu ne doivent être accessibles qu'avec un token admin valide.
 const requireAdmin = async (c: any, next: any) => {
   const authHeader = c.req.header('Authorization') || ''
   const token = authHeader.startsWith('Bearer ') ? authHeader.slice(7) : null
@@ -40,15 +34,11 @@ const requireAdmin = async (c: any, next: any) => {
   await next()
 }
 
-// =============================================================================
-// API ROUTES - Cours d'Arabe
-// =============================================================================
-
 app.post('/api/inscriptions/cours-arabe', async (c) => {
   try {
     const data = await c.req.json()
     const { DB, RESEND_API_KEY } = c.env
-    
+
     const result = await DB.prepare(`
       INSERT INTO cours_arabe_inscriptions (
         nom_eleve, prenom_eleve, date_naissance, niveau_arabe, type_cours,
@@ -64,10 +54,9 @@ app.post('/api/inscriptions/cours-arabe', async (c) => {
       data.autorisation_parentale || 0, data.autorisation_photos || 0,
       data.nombre_enfants || 1, data.frais_inscription, data.assurance_fournie || 0
     ).run()
-    
+
     const inscriptionId = result.meta.last_row_id;
-    
-    // Envoyer l'email de confirmation
+
     if (data.email) {
       const emailService = new EmailService(RESEND_API_KEY);
       const emailHtml = emailService.getCoursArabeConfirmationEmail({
@@ -77,14 +66,14 @@ app.post('/api/inscriptions/cours-arabe', async (c) => {
         niveau: data.niveau_arabe,
         frais: data.frais_inscription
       });
-      
+
       await emailService.sendEmail({
         to: data.email,
         subject: '✅ Confirmation d\'inscription - Mosquée Al Kawthar',
         html: emailHtml
       });
     }
-    
+
     return c.json({ success: true, id: inscriptionId, message: 'Inscription enregistrée avec succès' })
   } catch (error) {
     console.error('Erreur inscription cours arabe:', error)
@@ -102,15 +91,11 @@ app.get('/api/inscriptions/cours-arabe', requireAdmin, async (c) => {
   }
 })
 
-// =============================================================================
-// API ROUTES - Stages Intensifs
-// =============================================================================
-
 app.post('/api/inscriptions/stages', async (c) => {
   try {
     const data = await c.req.json()
     const { DB, RESEND_API_KEY } = c.env
-    
+
     const result = await DB.prepare(`
       INSERT INTO stages_intensifs_inscriptions (
         civilite, nom, prenom, telephone, date_naissance, email,
@@ -120,10 +105,9 @@ app.post('/api/inscriptions/stages', async (c) => {
       data.civilite, data.nom, data.prenom, data.telephone, data.date_naissance, data.email || null,
       data.type_stage, data.date_stage || null, data.montant
     ).run()
-    
+
     const inscriptionId = result.meta.last_row_id;
-    
-    // Envoyer l'email de confirmation
+
     if (data.email) {
       const emailService = new EmailService(RESEND_API_KEY);
       const emailHtml = emailService.getStageConfirmationEmail({
@@ -132,14 +116,14 @@ app.post('/api/inscriptions/stages', async (c) => {
         typeStage: data.type_stage,
         montant: data.montant
       });
-      
+
       await emailService.sendEmail({
         to: data.email,
         subject: '✅ Confirmation d\'inscription au stage - Mosquée Al Kawthar',
         html: emailHtml
       });
     }
-    
+
     return c.json({ success: true, id: inscriptionId, message: 'Inscription au stage enregistrée avec succès' })
   } catch (error) {
     console.error('Erreur inscription stage:', error)
@@ -157,10 +141,6 @@ app.get('/api/inscriptions/stages', requireAdmin, async (c) => {
   }
 })
 
-// =============================================================================
-// API ROUTES - Actualités
-// =============================================================================
-
 app.get('/api/actualites', async (c) => {
   try {
     const { DB } = c.env
@@ -175,41 +155,34 @@ app.post('/api/actualites', requireAdmin, async (c) => {
   try {
     const data = await c.req.json()
     const { DB } = c.env
-    
+
     const result = await DB.prepare(`
       INSERT INTO actualites (titre, contenu, image_url, auteur, categorie, est_publie)
       VALUES (?, ?, ?, ?, ?, ?)
     `).bind(data.titre, data.contenu, data.image_url || null, data.auteur || null, data.categorie || null, data.est_publie || 1).run()
-    
+
     return c.json({ success: true, id: result.meta.last_row_id })
   } catch (error) {
     return c.json({ success: false, message: 'Erreur lors de la création de l\'actualité' }, 500)
   }
 })
 
-// =============================================================================
-// API ROUTES - Horaires de Prière (Mawaqit)
-// =============================================================================
-
 app.get('/api/prayer-times', async (c) => {
   try {
-    // Rechercher la mosquée Al-Kawthar via l'API de recherche
     const response = await fetch('https://mawaqit.net/api/2.0/mosque/search?word=saint-pierre-des-corps')
-    
+
     if (!response.ok) {
       throw new Error('Erreur lors de la récupération des horaires')
     }
-    
+
     const data = await response.json()
-    
-    // Trouver la mosquée Al-Kawthar dans les résultats
+
     const mosquee = data.find((m: any) => m.slug === 'msp' || m.name.includes('AL-KAWTHAR'))
-    
+
     if (!mosquee) {
       throw new Error('Mosquée non trouvée')
     }
-    
-    // Extraire les horaires pertinents
+
     const prayerTimes = {
       fajr: mosquee.times[0],
       dhuhr: mosquee.times[2],
@@ -218,14 +191,14 @@ app.get('/api/prayer-times', async (c) => {
       isha: mosquee.times[5],
       jumua: mosquee.jumua,
       jumua2: mosquee.jumua2,
-      sunrise: mosquee.times[1] // Chourouk
+      sunrise: mosquee.times[1]
     }
-    
+
     return c.json({ success: true, prayerTimes })
   } catch (error) {
     console.error('Erreur récupération horaires:', error)
-    return c.json({ 
-      success: false, 
+    return c.json({
+      success: false,
       message: 'Erreur lors de la récupération des horaires',
       prayerTimes: {
         fajr: '--:--',
@@ -238,10 +211,6 @@ app.get('/api/prayer-times', async (c) => {
     }, 500)
   }
 })
-
-// =============================================================================
-// API ROUTES - Projets
-// =============================================================================
 
 app.get('/api/projets', async (c) => {
   try {
@@ -257,7 +226,7 @@ app.post('/api/projets', requireAdmin, async (c) => {
   try {
     const data = await c.req.json()
     const { DB } = c.env
-    
+
     const result = await DB.prepare(`
       INSERT INTO projets (titre, description, image_url, statut, objectif_financier, montant_collecte, date_debut, date_fin, est_actif)
       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
@@ -266,16 +235,12 @@ app.post('/api/projets', requireAdmin, async (c) => {
       data.objectif_financier || null, data.montant_collecte || 0,
       data.date_debut || null, data.date_fin || null, data.est_actif || 1
     ).run()
-    
+
     return c.json({ success: true, id: result.meta.last_row_id })
   } catch (error) {
     return c.json({ success: false, message: 'Erreur lors de la création du projet' }, 500)
   }
 })
-
-// =============================================================================
-// PAGE ROUTES
-// =============================================================================
 
 app.get('/', (c) => {
   return c.html(getLayout('Accueil', getHomePage(), '/'))
@@ -305,27 +270,19 @@ app.get('/contact', (c) => {
   return c.html(getLayout('Contact', getContactPage(), '/contact'))
 })
 
-// =============================================================================
-// ADMIN ROUTES
-// =============================================================================
-
-// Admin login page
 app.get('/admin/login', (c) => {
   return c.html(getAdminLoginPage())
 })
 
-// Admin dashboard
 app.get('/admin/dashboard', (c) => {
   return c.html(getAdminDashboardPage())
 })
 
-// Admin login API
 app.post('/api/admin/login', async (c) => {
   try {
     const { username, password } = await c.req.json()
     const { ADMIN_USERNAME, ADMIN_PASSWORD, ADMIN_TOKEN_SECRET } = c.env
 
-    // En local sans .dev.vars, on retombe sur des identifiants de dev explicites.
     const adminUser = ADMIN_USERNAME || 'admin'
     const adminPass = ADMIN_PASSWORD || 'changeme-dev-only'
     const secret = ADMIN_TOKEN_SECRET || 'dev-insecure-secret-change-me'

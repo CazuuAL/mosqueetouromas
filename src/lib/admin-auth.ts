@@ -1,7 +1,4 @@
-// Jetons admin signés (HMAC-SHA256) via Web Crypto, compatible Cloudflare Workers.
-// Évite de dépendre d'un JWT externe pour un besoin aussi simple (un seul compte admin).
-
-const TOKEN_TTL_MS = 24 * 60 * 60 * 1000 // 24h
+const TOKEN_TTL_MS = 24 * 60 * 60 * 1000
 
 function toHex(buffer: ArrayBuffer): string {
   return Array.from(new Uint8Array(buffer)).map(b => b.toString(16).padStart(2, '0')).join('')

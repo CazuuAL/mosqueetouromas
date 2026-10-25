@@ -24,7 +24,7 @@ export class EmailService {
 
     try {
       const result = await this.resend.emails.send({
-        from: 'Mosquée Al Kawthar <onboarding@resend.dev>', // À remplacer par votre domaine vérifié
+        from: 'Mosquée Al Kawthar <onboarding@resend.dev>',
         to: data.to,
         subject: data.subject,
         html: data.html,
@@ -38,7 +38,6 @@ export class EmailService {
     }
   }
 
-  // Template pour confirmation d'inscription cours d'arabe
   getCoursArabeConfirmationEmail(data: {
     nom: string;
     prenom: string;
@@ -110,7 +109,6 @@ export class EmailService {
     `;
   }
 
-  // Template pour confirmation d'inscription stage intensif
   getStageConfirmationEmail(data: {
     nom: string;
     prenom: string;

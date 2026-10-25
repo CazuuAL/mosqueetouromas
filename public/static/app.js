@@ -1,40 +1,33 @@
-// Mobile menu toggle
 document.addEventListener('DOMContentLoaded', function() {
   const mobileMenuBtn = document.getElementById('mobile-menu-btn');
   const mobileMenu = document.getElementById('mobile-menu');
-  
+
   if (mobileMenuBtn && mobileMenu) {
     mobileMenuBtn.addEventListener('click', function() {
       mobileMenu.classList.toggle('hidden');
     });
   }
 
-  // Load prayer times on home page
   if (document.getElementById('prayer-times-container')) {
     loadPrayerTimes();
   }
 
-  // Load actualités on home page
   if (document.getElementById('actualites-container')) {
     loadActualites();
   }
 
-  // Load all actualités on actualités page
   if (document.getElementById('all-actualites-container')) {
     loadAllActualites();
   }
 
-  // Load projets on projets page
   if (document.getElementById('projets-container')) {
     loadProjets();
   }
 
-  // Form handlers
   const coursArabeForm = document.getElementById('cours-arabe-form');
   if (coursArabeForm) {
     coursArabeForm.addEventListener('submit', handleCoursArabeSubmit);
-    
-    // Toggle mineur fields
+
     const typeCours = document.getElementById('type_cours');
     if (typeCours) {
       typeCours.addEventListener('change', function() {
@@ -49,11 +42,10 @@ document.addEventListener('DOMContentLoaded', function() {
   }
 });
 
-// Load prayer times
 async function loadPrayerTimes() {
   try {
     const response = await axios.get('/api/prayer-times');
-    
+
     if (response.data.success) {
       const times = response.data.prayerTimes;
       document.getElementById('fajr-time').textContent = times.fajr;
@@ -62,7 +54,6 @@ async function loadPrayerTimes() {
       document.getElementById('maghrib-time').textContent = times.maghrib;
       document.getElementById('isha-time').textContent = times.isha;
     } else {
-      // Afficher les horaires par défaut en cas d'erreur
       ['fajr', 'dhuhr', 'asr', 'maghrib', 'isha'].forEach(prayer => {
         const element = document.getElementById(`${prayer}-time`);
         if (element) {
@@ -73,7 +64,6 @@ async function loadPrayerTimes() {
     }
   } catch (error) {
     console.error('Erreur chargement horaires de prière:', error);
-    // Afficher un message d'erreur visuel
     ['fajr', 'dhuhr', 'asr', 'maghrib', 'isha'].forEach(prayer => {
       const element = document.getElementById(`${prayer}-time`);
       if (element) {
@@ -83,12 +73,11 @@ async function loadPrayerTimes() {
   }
 }
 
-// Load actualités (last 3)
 async function loadActualites() {
   try {
     const response = await axios.get('/api/actualites');
     const container = document.getElementById('actualites-container');
-    
+
     if (response.data.success && response.data.actualites.length > 0) {
       const actualites = response.data.actualites.slice(0, 3);
       container.innerHTML = actualites.map(actu => `
@@ -126,12 +115,11 @@ async function loadActualites() {
   }
 }
 
-// Load all actualités
 async function loadAllActualites() {
   try {
     const response = await axios.get('/api/actualites');
     const container = document.getElementById('all-actualites-container');
-    
+
     if (response.data.success && response.data.actualites.length > 0) {
       container.innerHTML = response.data.actualites.map(actu => `
         <div id="${actu.id}" class="bg-white rounded-xl shadow-lg overflow-hidden">
@@ -139,10 +127,10 @@ async function loadAllActualites() {
           <div class="p-8">
             <div class="text-sm text-teal-600 mb-3">
               <i class="far fa-calendar mr-1"></i>
-              ${new Date(actu.date_publication).toLocaleDateString('fr-FR', { 
-                year: 'numeric', 
-                month: 'long', 
-                day: 'numeric' 
+              ${new Date(actu.date_publication).toLocaleDateString('fr-FR', {
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric'
               })}
               ${actu.categorie ? `<span class="ml-4"><i class="fas fa-tag mr-1"></i>${actu.categorie}</span>` : ''}
             </div>
@@ -165,18 +153,17 @@ async function loadAllActualites() {
   }
 }
 
-// Load projets
 async function loadProjets() {
   try {
     const response = await axios.get('/api/projets');
     const container = document.getElementById('projets-container');
-    
+
     if (response.data.success && response.data.projets.length > 0) {
       container.innerHTML = response.data.projets.map(projet => {
-        const pourcentage = projet.objectif_financier 
+        const pourcentage = projet.objectif_financier
           ? Math.min(100, (projet.montant_collecte / projet.objectif_financier) * 100).toFixed(0)
           : 0;
-        
+
         return `
           <div class="bg-white rounded-xl shadow-lg overflow-hidden">
             ${projet.image_url ? `<img src="${projet.image_url}" alt="${projet.titre}" class="w-full h-48 object-cover">` : ''}
@@ -188,7 +175,7 @@ async function loadProjets() {
               </div>
               <h4 class="text-xl font-bold text-gray-800 mb-3">${projet.titre}</h4>
               <p class="text-gray-600 mb-4">${projet.description}</p>
-              
+
               ${projet.objectif_financier ? `
                 <div class="mb-4">
                   <div class="flex justify-between text-sm text-gray-600 mb-2">
@@ -201,7 +188,7 @@ async function loadProjets() {
                   <p class="text-center text-teal-600 font-semibold mt-2">${pourcentage}%</p>
                 </div>
               ` : ''}
-              
+
               <a href="${(window.HELLOASSO_URLS && window.HELLOASSO_URLS.dons) || '/contact'}" target="_blank" rel="noopener" class="block text-center bg-teal-600 text-white px-6 py-2 rounded-lg font-semibold hover:bg-teal-700 transition">
                 Soutenir ce projet
               </a>
@@ -222,15 +209,13 @@ async function loadProjets() {
   }
 }
 
-// Toggle mineur fields
 function toggleMineurFields(show) {
   const mineurSection = document.getElementById('mineur-section');
   const tarifInfo = document.getElementById('tarif-info');
-  
+
   if (mineurSection) {
     mineurSection.style.display = show ? 'block' : 'none';
-    
-    // Update required fields
+
     const requiredFields = mineurSection.querySelectorAll('input, select');
     requiredFields.forEach(field => {
       if (show) {
@@ -240,7 +225,7 @@ function toggleMineurFields(show) {
       }
     });
   }
-  
+
   if (tarifInfo) {
     if (show) {
       tarifInfo.innerHTML = `
@@ -262,20 +247,17 @@ function toggleMineurFields(show) {
   }
 }
 
-// Handle Cours Arabe Form Submit
 async function handleCoursArabeSubmit(e) {
   e.preventDefault();
-  
+
   const formData = new FormData(e.target);
   const data = Object.fromEntries(formData.entries());
-  
-  // Convert checkboxes to boolean
+
   data.est_mineur = data.type_cours === 'Enfants' ? 1 : 0;
   data.autorisation_parentale = formData.get('autorisation_parentale') ? 1 : 0;
   data.autorisation_photos = formData.get('autorisation_photos') ? 1 : 0;
   data.assurance_fournie = formData.get('assurance_fournie') ? 1 : 0;
-  
-  // Calculate frais_inscription
+
   if (data.type_cours === 'Enfants') {
     const tarifs = [140, 260, 360, 440, 500];
     data.frais_inscription = tarifs[Math.min(parseInt(data.nombre_enfants) - 1, 4)] || 140;
@@ -283,14 +265,14 @@ async function handleCoursArabeSubmit(e) {
     data.frais_inscription = 230;
     data.nombre_enfants = 1;
   }
-  
+
   const submitBtn = e.target.querySelector('button[type="submit"]');
   submitBtn.disabled = true;
   submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>Envoi en cours...';
-  
+
   try {
     const response = await axios.post('/api/inscriptions/cours-arabe', data);
-    
+
     if (response.data.success) {
       const payUrl = (window.HELLOASSO_URLS && window.HELLOASSO_URLS.coursArabe) || '/contact';
       showMessage(`✅ Inscription enregistrée ! <a href="${payUrl}" target="_blank" rel="noopener" class="underline font-bold">Payer maintenant via HelloAsso</a>`, 'success');
@@ -308,23 +290,21 @@ async function handleCoursArabeSubmit(e) {
   }
 }
 
-// Handle Stages Form Submit
 async function handleStagesSubmit(e) {
   e.preventDefault();
-  
+
   const formData = new FormData(e.target);
   const data = Object.fromEntries(formData.entries());
-  
-  // Set default montant (à adapter selon le stage)
-  data.montant = parseFloat(data.montant) || 50; // Prix par défaut
-  
+
+  data.montant = parseFloat(data.montant) || 50;
+
   const submitBtn = e.target.querySelector('button[type="submit"]');
   submitBtn.disabled = true;
   submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>Envoi en cours...';
-  
+
   try {
     const response = await axios.post('/api/inscriptions/stages', data);
-    
+
     if (response.data.success) {
       const payUrl = (window.HELLOASSO_URLS && window.HELLOASSO_URLS.stages) || '/contact';
       showMessage(`✅ Inscription au stage enregistrée ! <a href="${payUrl}" target="_blank" rel="noopener" class="underline font-bold">Payer maintenant via HelloAsso</a>`, 'success');
@@ -341,8 +321,6 @@ async function handleStagesSubmit(e) {
   }
 }
 
-
-// Show message
 function showMessage(message, type = 'success') {
   const alertDiv = document.createElement('div');
   alertDiv.className = `fixed top-24 right-4 z-50 px-6 py-4 rounded-lg shadow-lg ${
@@ -356,7 +334,7 @@ function showMessage(message, type = 'success') {
       </button>
     </div>
   `;
-  
+
   document.body.appendChild(alertDiv);
 
   setTimeout(() => {
