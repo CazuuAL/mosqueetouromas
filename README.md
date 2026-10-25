@@ -123,6 +123,23 @@ npm install
 cp .dev.vars.example .dev.vars   # puis renseignez vos propres valeurs
 ```
 
+### Où trouver les valeurs de `.dev.vars`
+
+| Variable | D'où vient-elle ? |
+|---|---|
+| `ADMIN_USERNAME` | Vous l'inventez : l'identifiant que vous voulez utiliser pour vous connecter sur `/admin/login`. |
+| `ADMIN_PASSWORD` | Vous l'inventez : choisissez un mot de passe solide (pas de mot de passe faible comme avant). |
+| `ADMIN_TOKEN_SECRET` | Vous la générez : une chaîne aléatoire longue, par ex. avec `openssl rand -hex 32`. Sert uniquement à signer les sessions admin. |
+| `RESEND_API_KEY` | Récupérée sur https://resend.com (compte gratuit) → **API Keys → Create API Key**. Détails complets : [RESEND_SETUP.md](./RESEND_SETUP.md). |
+
+Exemple de fichier `.dev.vars` complété :
+```
+ADMIN_USERNAME=admin
+ADMIN_PASSWORD=UnMotDePasseSolideChoisiParVous
+ADMIN_TOKEN_SECRET=a3f8c1e9... (sortie de openssl rand -hex 32)
+RESEND_API_KEY=re_xxxxxxxxxxxxxxxxxxxxxxxxxx
+```
+
 ### Base de Données Locale
 ```bash
 # Appliquer les migrations localement
