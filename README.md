@@ -1,80 +1,79 @@
 # Mosquée Al Kawthar - Site Web Officiel
 
-## 📋 Vue d'ensemble
+## Vue d'ensemble
 Site web pour la Mosquée Al Kawthar à Saint-Pierre-des-Corps. Plateforme complète pour informer la communauté et gérer les inscriptions aux cours et activités.
 
-## 🌐 URLs
+## URLs
 - **Développement Local**: http://localhost:3000 (voir "Installation et Développement" ci-dessous)
 - **Production**: [À déployer sur Cloudflare Pages]
 - **Repository GitHub**: [À configurer]
 
-## ✨ Fonctionnalités Actuelles
+## Fonctionnalités Actuelles
 
 ### Pages Publiques
-- ✅ **Page d'accueil** - Présentation de la mosquée, services, horaires de prières, actualités
-- ✅ **À propos** - Mission, histoire et valeurs de la mosquée (contenu à compléter)
-- ✅ **Cours d'Arabe** - Présentation des cours (enfants, femmes, hommes) avec formulaire d'inscription
-- ✅ **Stages Intensifs** - Inscription aux stages de vacances
-- ✅ **Projets** - Affichage des projets communautaires avec suivi des dons
-- ✅ **Actualités** - Liste complète des actualités de la mosquée
-- ✅ **Contact** - Informations de contact et formulaire de message
+- **Page d'accueil** - Présentation de la mosquée, services, horaires de prières, actualités
+- **À propos** - Mission, histoire et valeurs de la mosquée (contenu à compléter)
+- **Cours d'Arabe** - Présentation des cours (enfants, femmes, hommes) avec formulaire d'inscription
+- **Stages Intensifs** - Inscription aux stages de vacances
+- **Projets** - Affichage des projets communautaires avec suivi des dons
+- **Actualités** - Liste complète des actualités de la mosquée
+- **Contact** - Informations de contact et formulaire de message
 
 ### Système d'Inscriptions
-- ✅ **Cours d'Arabe**
+- **Cours d'Arabe**
   - Inscription pour enfants, femmes ou hommes
   - Niveaux : Débutant, Intermédiaire, Avancé
   - Tarifs dégressifs pour les familles (1-5 enfants)
   - Formulaire adaptatif selon le type de cours
   - Champs spécifiques pour mineurs (autorisations parentales, assurance)
   
-- ✅ **Stages Intensifs**
+- **Stages Intensifs**
   - Formulaire simplifié (civilité, nom, prénom, téléphone, date de naissance)
   - Sélection du type de stage
   - Gestion du paiement
 
 ### Base de Données
-- ✅ **Cloudflare D1 (SQLite)** configurée localement
-- ✅ Tables créées :
+- **Cloudflare D1 (SQLite)** configurée localement
+- Tables créées :
   - `cours_arabe_inscriptions` - Inscriptions aux cours d'arabe
   - `stages_intensifs_inscriptions` - Inscriptions aux stages
   - `actualites` - Gestion des actualités
   - `projets` - Gestion des projets et dons
 
 ### API REST
-- ✅ `GET /api/prayer-times` - Récupérer les horaires de prière en temps réel depuis Mawaqit
-- ✅ `GET /api/prayer-times` - Horaires de prière (Mawaqit)
-- ✅ `POST /api/inscriptions/cours-arabe` - Créer une inscription cours (public)
-- 🔒 `GET /api/inscriptions/cours-arabe` - Lister les inscriptions cours (admin uniquement)
-- ✅ `POST /api/inscriptions/stages` - Créer une inscription stage (public)
-- 🔒 `GET /api/inscriptions/stages` - Lister les inscriptions stages (admin uniquement)
-- ✅ `GET /api/actualites` - Lister les actualités publiées (public)
-- 🔒 `POST /api/actualites` - Créer une actualité (admin uniquement)
-- ✅ `GET /api/projets` - Lister les projets actifs (public)
-- 🔒 `POST /api/projets` - Créer un projet (admin uniquement)
-- ✅ `POST /api/admin/login` - Connexion admin (retourne un token signé)
+- `GET /api/prayer-times` - Horaires de prière (Mawaqit)
+- `POST /api/inscriptions/cours-arabe` - Créer une inscription cours (public)
+- `GET /api/inscriptions/cours-arabe` (protégé) - Lister les inscriptions cours (admin uniquement)
+- `POST /api/inscriptions/stages` - Créer une inscription stage (public)
+- `GET /api/inscriptions/stages` (protégé) - Lister les inscriptions stages (admin uniquement)
+- `GET /api/actualites` - Lister les actualités publiées (public)
+- `POST /api/actualites` (protégé) - Créer une actualité (admin uniquement)
+- `GET /api/projets` - Lister les projets actifs (public)
+- `POST /api/projets` (protégé) - Créer un projet (admin uniquement)
+- `POST /api/admin/login` - Connexion admin (retourne un token signé)
 
-🔒 = nécessite un header `Authorization: Bearer <token>` obtenu via `/api/admin/login`.
+(protégé) = nécessite un header `Authorization: Bearer <token>` obtenu via `/api/admin/login`.
 
 ### Intégration Mawaqit
-- ✅ **Horaires de prière en temps réel** depuis l'API Mawaqit
-- ✅ Affichage automatique de Fajr, Dhuhr, Asr, Maghrib et Isha
-- ✅ Mise à jour quotidienne des horaires
-- ✅ Source: [Mosquée Al-Kawthar sur Mawaqit](https://mawaqit.net/fr/msp)
+- **Horaires de prière en temps réel** depuis l'API Mawaqit
+- Affichage automatique de Fajr, Dhuhr, Asr, Maghrib et Isha
+- Mise à jour quotidienne des horaires
+- Source: [Mosquée Al-Kawthar sur Mawaqit](https://mawaqit.net/fr/msp)
 
-### 💳 Paiement en ligne (HelloAsso)
-- ✅ Boutons "Payer maintenant" / "Faire un don" redirigeant vers HelloAsso (dons, cours d'arabe, stages)
-- ✅ Lien de paiement inclus dans l'email de confirmation d'inscription
-- ⏳ URLs HelloAsso à configurer (actuellement vides, voir le guide ci-dessous)
-- 📖 Guide complet : [HELLOASSO_SETUP.md](./HELLOASSO_SETUP.md)
+### Paiement en ligne (HelloAsso)
+- Boutons "Payer maintenant" / "Faire un don" redirigeant vers HelloAsso (dons, cours d'arabe, stages)
+- Lien de paiement inclus dans l'email de confirmation d'inscription
+- URLs HelloAsso à configurer (actuellement vides, voir le guide ci-dessous)
+- Guide complet : [HELLOASSO_SETUP.md](./HELLOASSO_SETUP.md)
 
-## 🎨 Design
+## Design
 - Framework CSS: **Tailwind CSS** (via CDN)
 - Icônes: **Font Awesome 6**
 - Couleurs principales: Teal (vert-bleu) et jaune (logo)
 - Design responsive et moderne
 - Animations et effets de survol
 
-## 🏗️ Architecture Technique
+## Architecture Technique
 
 ### Frontend
 - **HTML5** avec templates TypeScript
@@ -97,7 +96,8 @@ webapp/
 │   │   ├── layout.ts          # Layout principal, navigation, footer
 │   │   ├── pages.ts           # Pages cours et stages
 │   │   └── other-pages.ts     # Autres pages (à propos, projets, etc.)
-│   └── renderer.tsx           # Renderer JSX de base
+│   ├── lib/                   # email.ts, admin-auth.ts
+│   └── config/                # helloasso.ts
 ├── public/
 │   └── static/
 │       ├── logo-mosquee.png   # Logo Al Kawthar
@@ -110,7 +110,7 @@ webapp/
 └── package.json               # Dépendances et scripts
 ```
 
-## 🔧 Installation et Développement
+## Installation et Développement
 
 ### Prérequis
 - Node.js 18+
@@ -170,12 +170,12 @@ curl -X POST http://localhost:3000/api/inscriptions/cours-arabe \
 4. Vérifier que ce lien pointe vers le bon formulaire HelloAsso (voir [HELLOASSO_SETUP.md](./HELLOASSO_SETUP.md))
 5. Vérifier que l'inscription apparaît dans `/admin/dashboard` (connexion admin requise)
 
-## 📝 Contenu à Compléter
+## Contenu à Compléter
 
 Les éléments suivants sont marqués avec `[TEXTE À COMPLÉTER]` ou `[VALEUR]` dans le code et doivent être renseignés :
 
 ### Page d'Accueil
-- [x] **Horaires des 5 prières quotidiennes** - ✅ Intégré via Mawaqit API
+- [x] **Horaires des 5 prières quotidiennes** - Intégré via Mawaqit API
 - [ ] Adresse complète de la mosquée (déjà sur Mawaqit: 71 rue de la Rabaterie 37700 Saint-Pierre-des-Corps)
 - [ ] Numéro de téléphone (déjà sur Mawaqit: 0033219264302)
 - [ ] Adresse email (déjà sur Mawaqit: mosqueespdc71@gmail.com)
@@ -200,7 +200,7 @@ Les éléments suivants sont marqués avec `[TEXTE À COMPLÉTER]` ou `[VALEUR]`
 ### Actualités et Projets
 - [ ] Ajouter du contenu initial via l'API ou interface admin
 
-## 🚀 Déploiement sur Cloudflare Pages
+## Déploiement sur Cloudflare Pages
 
 ### Étape 1: Configuration Cloudflare
 ```bash
@@ -226,7 +226,7 @@ npx wrangler pages secret put ADMIN_TOKEN_SECRET --project-name webapp   # ex: o
 npx wrangler pages secret put RESEND_API_KEY --project-name webapp
 ```
 
-⚠️ Sans `ADMIN_TOKEN_SECRET` configuré, le site retombe sur un secret de
+Sans `ADMIN_TOKEN_SECRET` configuré, le site retombe sur un secret de
 développement non sécurisé — ne déployez jamais en production sans l'avoir défini.
 
 ### Étape 3: Créer le Projet Pages
@@ -245,7 +245,7 @@ npm run deploy:prod
 - Production: `https://webapp.pages.dev`
 - Branches: `https://[branch].webapp.pages.dev`
 
-## 📊 Gestion des Données
+## Gestion des Données
 
 ### Voir les Inscriptions
 ```bash
@@ -295,39 +295,13 @@ curl -X POST http://localhost:3000/api/projets \
   }'
 ```
 
-## 🔐 Sécurité
-- ✅ CORS configuré pour les routes API
-- ✅ Authentification admin par token signé (HMAC-SHA256), expiration 24h
-- ✅ Routes sensibles protégées (inscriptions, création d'actualités/projets)
-- ✅ Base de données D1 sécurisée
-- ⏳ À ajouter : Rate limiting
-- ⏳ À ajouter : Protection CSRF pour les formulaires publics
-
-## 🎯 Prochaines Étapes Recommandées
-
-### Fonctionnalités Prioritaires
-1. ~~**Interface Admin**~~ - ✅ **IMPLÉMENTÉ** - Panneau d'administration pour gérer actualités, projets et inscriptions
-2. ~~**Système d'authentification**~~ - ✅ **IMPLÉMENTÉ** - Token admin signé, routes sensibles protégées
-3. **Notifications email** - ✅ **IMPLÉMENTÉ** (Resend) - voir [RESEND_SETUP.md](./RESEND_SETUP.md)
-4. **Paiement en ligne** - ⏳ Boutons en place, URLs HelloAsso à configurer - voir [HELLOASSO_SETUP.md](./HELLOASSO_SETUP.md)
-5. ~~**Horaires de prières dynamiques**~~ - ✅ **IMPLÉMENTÉ** - API Mawaqit pour horaires en temps réel
-6. **Calendrier des événements** - Gestion et affichage des événements de la mosquée
-7. **Dashboard de suivi** - Tableau de bord pour voir les statistiques d'inscription et paiements
-8. **Marquer un paiement comme reçu** - Actuellement le rapprochement HelloAsso ↔ inscription est manuel (voir HELLOASSO_SETUP.md)
-
-### Améliorations UX
-- Ajout de animations et transitions
-- Mode sombre optionnel
-- Version arabe du site (RTL)
-- Amélioration de l'accessibilité (ARIA labels)
-
-### Performance
-- Optimisation des images
-- Mise en cache des données
-- Lazy loading des images
-
-## 📞 Support
-Pour toute question ou assistance, contactez l'administrateur du site.
+## Sécurité
+- CORS configuré pour les routes API
+- Authentification admin par token signé (HMAC-SHA256), expiration 24h
+- Routes sensibles protégées (inscriptions, création d'actualités/projets)
+- Base de données D1 sécurisée
+- À ajouter : Rate limiting
+- À ajouter : Protection CSRF pour les formulaires publics
 
 ---
 
