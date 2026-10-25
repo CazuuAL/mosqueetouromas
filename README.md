@@ -1,4 +1,4 @@
-# Mosquée Al Kawthar - Site Web Officiel
+# Mosquée Al Kawthar 
 
 ## Vue d'ensemble
 Site web pour la Mosquée Al Kawthar à Saint-Pierre-des-Corps. Plateforme complète pour informer la communauté et gérer les inscriptions aux cours et activités.
